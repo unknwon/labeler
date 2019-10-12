@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-const version = "0.1.1"
+const version = "0.2.0"
 
 func main() {
 	log.SetFlags(0)
@@ -17,6 +17,7 @@ func main() {
 		Usage: "A CLI tool to sync labels for a GitHub repository with templates",
 		Commands: []cli.Command{
 			saveCmd,
+			syncCmd,
 		},
 		Flags: []cli.Flag{
 			cli.StringFlag{

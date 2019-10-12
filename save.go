@@ -67,5 +67,7 @@ func runSaveCmd(c *cli.Context) error {
 	if err = enc.Encode(labels); err != nil {
 		return fmt.Errorf("encode JSON: %v", err)
 	}
+
+	fmt.Printf("Labels have been saved to %q!\n", c.String("to"))
 	return nil
 }
