@@ -6,9 +6,9 @@ import (
 
 // Label contains information of a GitHub label.
 type Label struct {
-	Name        string
-	Color       string
-	Description string
+	Name        string `json:"name"`
+	Color       string `json:"color"`
+	Description string `json:"description"`
 }
 
 // ToLabel populates non-nil value from github.Label to Label.
