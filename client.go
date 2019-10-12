@@ -3,14 +3,14 @@ package main
 import (
 	"context"
 
-	"github.com/shurcooL/githubv4"
+	"github.com/google/go-github/v28/github"
 	"github.com/urfave/cli"
 	"golang.org/x/oauth2"
 )
 
 // client returns a new GitHub v4 client.
-func client(c *cli.Context) *githubv4.Client {
-	return githubv4.NewClient(
+func client(c *cli.Context) *github.Client {
+	return github.NewClient(
 		oauth2.NewClient(
 			context.Background(),
 			oauth2.StaticTokenSource(

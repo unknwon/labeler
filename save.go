@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/shurcooL/githubv4"
+	"github.com/google/go-github/v28/github"
 	"github.com/urfave/cli"
 )
 
@@ -35,36 +35,25 @@ var saveCmd = cli.Command{
 }
 
 func runSaveCmd(c *cli.Context) error {
+	opt := &github.ListOptions{
+		PerPage: 100,
+	}
 	client := client(c)
 
-	var q struct {
-		Repository struct {
-			Labels struct {
-				Nodes    []Label
-				PageInfo PageInfo
-			} `graphql:"labels(first: 100, after: $after)"`
-		} `graphql:"repository(owner: $repositoryOwner,name: $repositoryName)"`
-	}
-	vars := map[string]interface{}{
-		"repositoryOwner": githubv4.String(c.String("owner")),
-		"repositoryName":  githubv4.String(c.String("repo")),
-		"after":           (*githubv4.String)(nil),
-	}
-
-	var labels []Label
+	var labels []*Label
 	for {
-		err := client.Query(context.Background(), &q, vars)
+		ls, resp, err := client.Issues.ListLabels(context.Background(), c.String("owner"), c.String("repo"), opt)
 		if err != nil {
-			return fmt.Errorf("query: %v", err)
+			return fmt.Errorf("list labels: %v", err)
+		}
+		for _, l := range ls {
+			labels = append(labels, ToLabel(l))
 		}
 
-		labels = append(labels, q.Repository.Labels.Nodes...)
-
-		if !q.Repository.Labels.PageInfo.HasNextPage {
+		if resp.NextPage == 0 {
 			break
 		}
-
-		vars["after"] = githubv4.String(q.Repository.Labels.PageInfo.EndCursor)
+		opt.Page = resp.NextPage
 	}
 
 	fw, err := os.Create(c.String("to"))
