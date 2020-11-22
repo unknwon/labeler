@@ -27,6 +27,8 @@ GLOBAL OPTIONS:
 
 ## Example
 
+Create a personal access token with `repo` scope selected.
+
 Save labels from a repository:
 ```sh
 $ export LABELER_TOKEN={your GitHub token}
